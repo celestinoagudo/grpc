@@ -1,0 +1,21 @@
+syntax = "proto3";
+package auto;
+option java_package = "grind.twofourseven.model.auto";
+option java_multiple_files = true;
+
+enum BodyStyle {
+  SEDAN = 0;
+  COUPE = 1;
+  SUV = 2;
+}
+
+message Car {
+  string make = 1;
+  string model = 2;
+  int32 year = 3;
+  BodyStyle body_style = 4;
+}
+
+message Dealer {
+  map<int32, Car> inventory = 1;
+}
