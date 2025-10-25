@@ -6,6 +6,10 @@ import grind.twofourseven.model.Student;
 import grind.twofourseven.model.auto.BodyStyle;
 import grind.twofourseven.model.auto.Car;
 import grind.twofourseven.model.auto.Dealer;
+import grind.twofourseven.model.common.Librarian;
+import grind.twofourseven.model.inheritance.Credentials;
+import grind.twofourseven.model.inheritance.Email;
+import grind.twofourseven.model.inheritance.Phone;
 import grind.twofourseven.model.library.Book;
 import grind.twofourseven.model.library.Library;
 import org.slf4j.Logger;
@@ -80,5 +84,27 @@ public class GrpcPlaygroundMainApp {
 
         var carDefaultValues = Car.newBuilder().build();
         LOGGER.info("Body Type ? {}", carDefaultValues.getBodyStyle());
+
+        //One Of
+        var email = Email.newBuilder().setAddress("admin@gmail.com").setPassword("admin").build();
+        var phone = Phone.newBuilder().setNumber(1234567891).setCode(63).build();
+        var credentials = Credentials.newBuilder().setEmail(email)
+                .setPhone(phone).build(); //will be set to last type set
+        login(credentials);
+
+        //Importing modules.
+        var libraryWithLibrarian = Library.newBuilder()
+                .setLibrarian(Librarian.newBuilder().setName("Ayra").setAge(32).build());
+
+        LOGGER.info("Library with Librarian ? {}", libraryWithLibrarian);
+    }
+
+    private static void login(Credentials credentials) {
+        switch (credentials.getLoginTypeCase()) {
+            case EMAIL -> LOGGER.info("Of Type Email: {}", credentials.getEmail().getAddress());
+            case PHONE -> LOGGER.info("Of Type Phone: {}", credentials.getPhone().getNumber());
+            default -> throw new IllegalArgumentException("Unsupported Login Type!");
+        }
+
     }
 }

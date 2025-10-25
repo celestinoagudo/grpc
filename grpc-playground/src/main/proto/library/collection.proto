@@ -1,5 +1,6 @@
 syntax = "proto3";
 package library;
+import "library/common/librarian.proto";
 option java_package = "grind.twofourseven.model.library";
 option java_multiple_files = true;
 
@@ -11,5 +12,6 @@ message Book {
 
 message Library {
   string name = 1;
-  repeated Book books = 2;
+  common.Librarian librarian = 2;
+  repeated Book books = 3;
 }
