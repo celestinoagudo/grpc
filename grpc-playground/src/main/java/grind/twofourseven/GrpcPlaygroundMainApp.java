@@ -62,5 +62,23 @@ public class GrpcPlaygroundMainApp {
         LOGGER.info("Model: {}", dealer.getInventoryOrThrow(1).getModel());
         LOGGER.info("Body Style: {}", dealer.getInventoryOrThrow(3).getBodyStyle());
 //        LOGGER.info("Model: {}", dealer.getInventoryOrThrow(4).getModel()); //throws illegal argument exception
+
+        //DEFAULT VALUES
+        var schoolDefaultValue = School.newBuilder().build();
+        LOGGER.info("School Id: {}", schoolDefaultValue.getId()); //primitive 0
+        LOGGER.info("School Name: {}", schoolDefaultValue.getName()); //empty String NOT null
+        LOGGER.info("School City: {}", schoolDefaultValue.getAddress().getCity()); //empty String NOT null
+        LOGGER.info("Is Default Instance? {}", schoolDefaultValue.getAddress()
+                .equals(Address.getDefaultInstance())); //true
+        LOGGER.info("Has Address ? {}", schoolDefaultValue.hasAddress()); //false
+
+        var libraryDefaultValues = Library.newBuilder().build();
+        LOGGER.info("Books ? {}", libraryDefaultValues.getBooksList()); //empty String
+
+        var dealerDefaultValues = Dealer.newBuilder().build();
+        LOGGER.info("Inventory ? {}", dealerDefaultValues.getInventoryMap()); //empty String
+
+        var carDefaultValues = Car.newBuilder().build();
+        LOGGER.info("Body Type ? {}", carDefaultValues.getBodyStyle());
     }
 }
