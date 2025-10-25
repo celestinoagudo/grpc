@@ -1,5 +1,7 @@
 package grind.twofourseven;
 
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.Timestamp;
 import grind.twofourseven.model.Address;
 import grind.twofourseven.model.School;
 import grind.twofourseven.model.Student;
@@ -10,11 +12,13 @@ import grind.twofourseven.model.common.Librarian;
 import grind.twofourseven.model.inheritance.Credentials;
 import grind.twofourseven.model.inheritance.Email;
 import grind.twofourseven.model.inheritance.Phone;
+import grind.twofourseven.model.known.WellKnown;
 import grind.twofourseven.model.library.Book;
 import grind.twofourseven.model.library.Library;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +59,8 @@ public class GrpcPlaygroundMainApp {
                 .setBodyStyle(BodyStyle.SEDAN)
                 .build();
 
-        var dealer = Dealer.newBuilder().putAllInventory(Map.ofEntries(Map.entry(1, car1), Map.entry(2, car2), Map.entry(3, car3))).build();
+        var dealer = Dealer.newBuilder().putAllInventory(Map.ofEntries(Map.entry(1, car1), Map.entry(2, car2),
+                Map.entry(3, car3))).build();
 
         LOGGER.info("Address: {}", address);
         LOGGER.info("Student: {}", student);
@@ -94,9 +99,15 @@ public class GrpcPlaygroundMainApp {
 
         //Importing modules.
         var libraryWithLibrarian = Library.newBuilder()
-                .setLibrarian(Librarian.newBuilder().setName("Ayra").setAge(32).build());
+                .setLibrarian(Librarian.newBuilder().setName("Ayra Erika").setAge(32).build());
+
+        var wellKnown = WellKnown.newBuilder().setAge(Int32Value.of(32))
+                .setLoginTime(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond())).build();
 
         LOGGER.info("Library with Librarian ? {}", libraryWithLibrarian);
+        LOGGER.info("Well Known ? {}", wellKnown);
+        LOGGER.info("Well Known Date Time ? {}", Instant.ofEpochSecond(wellKnown.getLoginTime().getSeconds()));
+        LOGGER.info("Well Known Has Login Time ? {}", wellKnown.hasLoginTime());
     }
 
     private static void login(Credentials credentials) {

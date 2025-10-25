@@ -1,0 +1,12 @@
+syntax = "proto3";
+package well.known;
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "grind.twofourseven.model.known";
+option java_multiple_files = true;
+
+message WellKnown {
+  google.protobuf.Int32Value age = 1;
+  optional google.protobuf.Timestamp login_time = 2;
+}
