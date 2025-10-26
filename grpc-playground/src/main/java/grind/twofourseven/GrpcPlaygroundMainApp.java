@@ -1,6 +1,7 @@
 package grind.twofourseven;
 
 import com.google.protobuf.Int32Value;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 import grind.twofourseven.model.Address;
 import grind.twofourseven.model.School;
@@ -15,6 +16,10 @@ import grind.twofourseven.model.inheritance.Phone;
 import grind.twofourseven.model.known.WellKnown;
 import grind.twofourseven.model.library.Book;
 import grind.twofourseven.model.library.Library;
+import grind.twofourseven.model.versioning.v1.Television;
+import grind.twofourseven.model.versioning.v2.Type;
+import grind.twofourseven.parser.V1Parser;
+import grind.twofourseven.parser.V2Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +31,7 @@ public class GrpcPlaygroundMainApp {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrpcPlaygroundMainApp.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidProtocolBufferException {
 
         var address = Address.newBuilder().setStreet("123 Main Street").setCity("Atlanta")
                 .setState("GA").build();
@@ -108,6 +113,17 @@ public class GrpcPlaygroundMainApp {
         LOGGER.info("Well Known ? {}", wellKnown);
         LOGGER.info("Well Known Date Time ? {}", Instant.ofEpochSecond(wellKnown.getLoginTime().getSeconds()));
         LOGGER.info("Well Known Has Login Time ? {}", wellKnown.hasLoginTime());
+
+        //version compatibility
+        var television1 = Television.newBuilder().setBrand("Sony").setYear(2025).build();
+        V1Parser.parse(television1.toByteArray());
+
+        //V2 Version Compatibility
+        var television2 = grind.twofourseven.model.versioning.v2.Television.newBuilder().setBrand("Samsung")
+                .setModel(123).setType(Type.HD).build();
+        V1Parser.parse(television2.toByteArray());
+        V2Parser.parse(television2.toByteArray());
+        V2Parser.parse(television1.toByteArray());
     }
 
     private static void login(Credentials credentials) {
