@@ -1,0 +1,81 @@
+grpc - modern lightweight RPC (remote procedure call) framework from Google for service to service communication.
+grpc vs REST
+- REST
+	- Architectural style
+	- resource oriented
+	- JSON and HTTP
+- grPC
+	- An RPC framework
+	- more flexible and action oriented.
+	- specific to inter-services communication.
+
+- JSON: human friendly, browsers can support.
+	- no type safety, text format (not machine friendly)
+	- data size is relatively larger, it takes more bandwidth in the network, takes more time to serialize and deserialize.
+- Protocol Buffers
+	- platform / language neutral mechanism for serializing/deserializing structured data.
+	- it is binary format
+		- might not be human friendly but machine friendly
+	- interface definition language
+	- runtime libraries for data serialization
+
+
+HTTP/2
+- major revision of HTTP/1.1
+- binary framing
+- multiplexing, HTTP/1 1 request per connection, allows multiple concurrent requests per single connection.
+- header compression
+
+In Protocol Buffers (Protobuf), the "number" refers to the field number assigned to each field within a message definition. These field numbers are crucial for identifying fields during serialization and deserialization of Protobuf messages.
+
+	-- Unique Identifier: Each field number must be unique within a given message type. This uniqueness allows Protobuf to correctly identify and match values to their corresponding fields when encoding and decoding messages.
+
+	-- Wire Format Identification: When a Protobuf message is serialized into its binary wire format, the field numbers are used as keys to identify the data associated with each field. This is more efficient than including the entire field name in the serialized data.
+
+	-- Immutability: Once a Protobuf message type is in use, the field numbers assigned to its fields should not be changed. Changing a field number is equivalent to deleting the old field and creating a new one, which can lead to compatibility issues with existing serialized data or older versions of code.
+
+	-- Optimization for Lower Numbers: Field numbers in the range of 1 to 15 are more efficient in the wire format, taking up less space (one byte) compared to higher numbers (which take two or more bytes). Therefore, it is recommended to use these lower numbers for frequently used or repeated fields.
+
+	-- Reserved Numbers: Certain field numbers (e.g., 19,000 to 19,999) are reserved for internal use by the Protocol Buffers implementation and should not be used in user-defined messages.
+
+	-- Versioning and Compatibility: Field numbers play a vital role in maintaining backward and forward compatibility when evolving Protobuf message definitions. As long as field numbers remain consistent for a given field, new fields can be added or old ones can be deprecated without breaking existing systems.
+
+
+Field number can be unique but it could be anything: 1-15 for most frequently used fields.
+
+gRPC
+- RPC - remote procedure call
+
+REST                          RPC
+=============================================
+GET /student/{id}       | getStudent(id)
+POST /student {...}     | createStudent(student)
+DELETE /student/{id}    | deleteStudent(id)
+
+
+Unary -> service class will be registered to the server.
+	-> follows Observer Pattern: 
+	public interface StreamObserver<V> {
+		//to send response
+		void onNext(V var1);
+		//invoke one of the following methods:
+		void onCompleted();
+		void onError(Throwable var1)
+
+	}
+
+
+Channel / Stub
+// channel should be mostly private.
+// we create once in the beginning of the application. It is managed.
+var channel = ..... ;
+
+// stub uses channel. Create once and inject wherever we need. Singleton / @Bean and thread-safe
+
+Stub - Synchronous vs Asynchronous
+* Client's call to the server can be Sync/Async
+	- sync -> blocking / waiting for the response.
+	- async -> register a listener for callback.
+* it's completely up to the Client
+	- it also depends on the RPC
+	- Network calls are non-blocking behind the scenes.
