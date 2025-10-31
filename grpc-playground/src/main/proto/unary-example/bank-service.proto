@@ -1,0 +1,17 @@
+syntax = "proto3";
+package unary;
+option java_package = "grind.twofourseven.model.unary";
+option java_multiple_files = true;
+
+message BalanceCheckRequest {
+  int32 account_number = 1;
+}
+
+message AccountBalance {
+  int32 account_number = 1;
+  int32 balance = 2;
+}
+
+service BankService {
+  rpc GetAccountBalance(BalanceCheckRequest) returns (AccountBalance);
+}
