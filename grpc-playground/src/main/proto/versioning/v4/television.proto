@@ -1,0 +1,19 @@
+syntax = "proto3";
+package versioning.v4;
+
+option java_package = "grind.twofourseven.model.versioning.v4";
+option java_multiple_files = true;
+
+message Television {
+  string brand = 1;
+  reserved 2;
+  reserved "year", "model";
+  Type type = 3;
+  int32 price = 4;
+}
+
+enum Type {
+  HD = 0;
+  UHD = 1;
+  OLED = 2;
+}

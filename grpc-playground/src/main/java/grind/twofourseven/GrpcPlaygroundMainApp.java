@@ -20,6 +20,7 @@ import grind.twofourseven.model.versioning.v1.Television;
 import grind.twofourseven.model.versioning.v2.Type;
 import grind.twofourseven.parser.V1Parser;
 import grind.twofourseven.parser.V2Parser;
+import grind.twofourseven.parser.V3Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,9 +122,16 @@ public class GrpcPlaygroundMainApp {
         //V2 Version Compatibility
         var television2 = grind.twofourseven.model.versioning.v2.Television.newBuilder().setBrand("Samsung")
                 .setModel(123).setType(Type.HD).build();
-        V1Parser.parse(television2.toByteArray());
-        V2Parser.parse(television2.toByteArray());
-        V2Parser.parse(television1.toByteArray());
+        //V2 Version Compatibility
+        var television3 = grind.twofourseven.model.versioning.v3.Television.newBuilder().setBrand("Samsung")
+                .setType(grind.twofourseven.model.versioning.v3.Type.HD).build();
+
+        LOGGER.info("V1 Parsing Results: ");
+        V1Parser.parse(television3.toByteArray());
+        LOGGER.info("V2 Parsing Results: ");
+        V2Parser.parse(television3.toByteArray());
+        LOGGER.info("V3 Parsing Results: ");
+        V3Parser.parse(television3.toByteArray());
     }
 
     private static void login(Credentials credentials) {
