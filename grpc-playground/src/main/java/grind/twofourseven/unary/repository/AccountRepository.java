@@ -1,5 +1,6 @@
 package grind.twofourseven.unary.repository;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,5 +12,9 @@ public class AccountRepository {
 
     public static Integer getBalance(final int accountNumber) {
         return db.get(accountNumber);
+    }
+
+    public static Map<Integer, Integer> getAllAccounts() {
+        return Collections.unmodifiableMap(db);
     }
 }
