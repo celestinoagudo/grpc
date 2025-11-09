@@ -1,4 +1,4 @@
-package grind.twofourseven.unary.repository;
+package grind.twofourseven.patterns.repository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,5 +24,9 @@ public class AccountRepository {
 
     public static void deductAmount(int accountNumber, int amount) {
         db.computeIfPresent(accountNumber, (_, balance) -> balance - amount);
+    }
+
+    public static void addAmount(int accountNumber, int amount) {
+        db.computeIfPresent(accountNumber, (_, balance) -> balance + amount);
     }
 }

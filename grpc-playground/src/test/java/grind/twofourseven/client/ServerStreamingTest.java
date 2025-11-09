@@ -1,4 +1,4 @@
-package grind.twofourseven.unary.client;
+package grind.twofourseven.client;
 
 import grind.twofourseven.common.ResponseObserver;
 import grind.twofourseven.model.unary.Money;

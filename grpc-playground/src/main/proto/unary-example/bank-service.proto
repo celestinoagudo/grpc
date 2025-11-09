@@ -26,6 +26,13 @@ message Money {
   int32 amount = 1;
 }
 
+message DepositRequest {
+  oneof request {//use this if we just want to provide any of the fields.
+    int32 account_number = 1;
+    Money money = 2;
+  }
+}
+
 service BankService {
   //unary
   rpc GetAccountBalance(BalanceCheckRequest) returns (AccountBalance);
@@ -33,4 +40,7 @@ service BankService {
 
   //server streaming
   rpc Withdraw(WithdrawRequest) returns (stream Money);
+
+  //client streaming
+  rpc Deposit(stream DepositRequest) returns (AccountBalance);
 }

@@ -1,4 +1,4 @@
-package grind.twofourseven.unary.client;
+package grind.twofourseven.client;
 
 import com.google.protobuf.Empty;
 import grind.twofourseven.model.unary.BalanceCheckRequest;

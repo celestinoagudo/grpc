@@ -1,9 +1,9 @@
-package grind.twofourseven.unary.client;
+package grind.twofourseven.client;
 
 import grind.twofourseven.common.AbstractChannelTest;
 import grind.twofourseven.common.GrpcServer;
 import grind.twofourseven.model.unary.BankServiceGrpc;
-import grind.twofourseven.unary.service.BankService;
+import grind.twofourseven.patterns.service.BankService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 

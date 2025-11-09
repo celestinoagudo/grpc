@@ -1,9 +1,10 @@
-package grind.twofourseven.unary.service;
+package grind.twofourseven.patterns.service;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.protobuf.Empty;
 import grind.twofourseven.model.unary.*;
-import grind.twofourseven.unary.repository.AccountRepository;
+import grind.twofourseven.patterns.repository.AccountRepository;
+import grind.twofourseven.patterns.request.handlers.DepositRequestHandler;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,5 +62,14 @@ public class BankService extends BankServiceGrpc.BankServiceImplBase {
             Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(1));
         }
         responseObserver.onCompleted();
+    }
+
+    /**
+     * @param responseObserver - sent to server (outgoing).
+     * @return StreamObserver - returns by the Server (incoming).
+     */
+    @Override
+    public StreamObserver<DepositRequest> deposit(final StreamObserver<AccountBalance> responseObserver) {
+        return new DepositRequestHandler(responseObserver);
     }
 }
