@@ -1,44 +1,33 @@
 package grind.twofourseven.unary.client;
 
+import com.google.protobuf.Empty;
+import grind.twofourseven.common.ResponseObserver;
 import grind.twofourseven.model.unary.AccountBalance;
+import grind.twofourseven.model.unary.AllAccountsResponse;
 import grind.twofourseven.model.unary.BalanceCheckRequest;
-import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.CountDownLatch;
 
 class UnaryAsyncTest extends AbstractTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UnaryAsyncTest.class);
+    @Test
+    void getBalanceTest() {
+        var request = BalanceCheckRequest.newBuilder().setAccountNumber(1).build();
+        var observer = ResponseObserver.<AccountBalance>create();
+        asyncStub.getAccountBalance(request, observer);
+        observer.await();
+        Assertions.assertEquals(1, observer.getItems().size());
+        Assertions.assertEquals(100, observer.getItems().getFirst().getBalance());
+        Assertions.assertNull(observer.getThrowable());
+    }
 
     @Test
-    void getBalanceTest() throws InterruptedException {
-        var request = BalanceCheckRequest.newBuilder().setAccountNumber(1).build();
-        var latch = new CountDownLatch(1);
-        asyncStub.getAccountBalance(request, new StreamObserver<>() {
-            @Override
-            public void onNext(final AccountBalance accountBalance) {
-                LOGGER.info("Async balance received: {}", accountBalance);
-                try {
-                    Assertions.assertEquals(100, accountBalance.getBalance());
-                } finally {
-                    latch.countDown();
-                }
-            }
-
-            @Override
-            public void onError(final Throwable throwable) {
-                LOGGER.error("Account Balance Retrieval failed due to: {}", throwable.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-                LOGGER.info("Completed!");
-            }
-        });
-        latch.await();
+    void allAccountsTest() {
+        var observer = ResponseObserver.<AllAccountsResponse>create();
+        asyncStub.getAllAccounts(Empty.getDefaultInstance(), observer);
+        observer.await();
+        Assertions.assertEquals(1, observer.getItems().size());
+        Assertions.assertEquals(10, observer.getItems().getFirst().getAccountsCount());
+        Assertions.assertNull(observer.getThrowable());
     }
 }
