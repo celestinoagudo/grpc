@@ -1,5 +1,7 @@
 package grind.twofourseven.unary.client;
 
+import grind.twofourseven.common.ResponseObserver;
+import grind.twofourseven.model.unary.Money;
 import grind.twofourseven.model.unary.WithdrawRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,4 +25,15 @@ class ServerStreamingTest extends AbstractTest {
         Assertions.assertEquals(2, count);
     }
 
+    @Test
+    void asyncClientWithdrawTest() {
+        var request = WithdrawRequest.newBuilder().setAmount(20).setAccountNumber(1)
+                .build();
+        var observer = ResponseObserver.<Money>create();
+        asyncStub.withdraw(request, observer);
+        observer.await();
+        Assertions.assertEquals(2, observer.getItems().size());
+        Assertions.assertEquals(10, observer.getItems().getFirst().getAmount());
+        Assertions.assertNull(observer.getThrowable());
+    }
 }

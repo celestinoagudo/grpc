@@ -133,3 +133,23 @@ Server Sreaming
  - Infinite
  - onError
 
+what about ordering?
+- provides the guarantee that client will receive the messages in the order they were emitted.
+
+Streaming vs Unary
+- Streaming:
+	- size - potentially large / unknown.
+		- huge file
+		- send info in chunks
+	- time consuming - periodic update
+		- uber
+- Unary
+	- more efficient than streaming RPC
+	- size is not too big and not very time consuming
+
+- Stream observer is not really a thread safe object.
+- Sequential vs Parallel processing: within onNext method, we can create kind of executor service and pass the item there.
+
+Server Emitting Rate (Backpressure):
+- we can do via bi-directional communication
+
