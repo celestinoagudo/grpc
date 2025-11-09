@@ -1,14 +1,18 @@
 package grind.twofourseven.unary.service;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.protobuf.Empty;
-import grind.twofourseven.model.unary.AccountBalance;
-import grind.twofourseven.model.unary.AllAccountsResponse;
-import grind.twofourseven.model.unary.BalanceCheckRequest;
-import grind.twofourseven.model.unary.BankServiceGrpc;
+import grind.twofourseven.model.unary.*;
 import grind.twofourseven.unary.repository.AccountRepository;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
 
 public class BankService extends BankServiceGrpc.BankServiceImplBase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BankService.class);
 
     /**
      * @param request          - provided by the client.
@@ -35,6 +39,27 @@ public class BankService extends BankServiceGrpc.BankServiceImplBase {
                 .toList();
         var response = AllAccountsResponse.newBuilder().addAllAccounts(accounts).build();
         responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void withdraw(final WithdrawRequest request, final StreamObserver<Money> responseObserver) {
+        var accountNumber = request.getAccountNumber();
+        var requestedAmount = request.getAmount();
+        var accountBalance = AccountRepository.getBalance(accountNumber);
+
+        if (requestedAmount > accountBalance) {
+            responseObserver.onCompleted();
+            return;
+        }
+
+        for (int i = 0; i < (requestedAmount / 10); ++i) {
+            var money = Money.newBuilder().setAmount(10).build();
+            responseObserver.onNext(money);
+            LOGGER.info("Money Sent: {}", money);
+            AccountRepository.deductAmount(accountNumber, 10);
+            Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(1));
+        }
         responseObserver.onCompleted();
     }
 }
