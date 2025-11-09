@@ -79,3 +79,57 @@ Stub - Synchronous vs Asynchronous
 * it's completely up to the Client
 	- it also depends on the RPC
 	- Network calls are non-blocking behind the scenes.
+
+gRPC - CRUD
+
+service BookService {
+	
+	//GET
+	rpc GetBookById(BookId) returns (Book);
+
+	//POST
+	rpc SaveBook(Book) returns (Book);
+
+	//PUT
+	rpc UpdateBook(Book) returns (Book);
+
+	//DELETE
+	rpc DeleteBook(BookId) returns (Void);
+}
+
+message Book {...}
+message BookId {int32 id = 1}
+message Void { }
+
+gRPC - Client Server Communication
+- By using the proto file, we define the RPC method.
+- Then using the protoc Tool we generate some source.
+- It will create one abstract service for the server to implement, and it will create one fake service for client to use.
+- So we will be implementing the actual service, we will provide the implementation by extending the abstract class.
+- And we will add it to the server. Then the server will expose the API
+- Now by creating one channel we establish the connection with the server.
+- Then by using the stub and the channel we invoke the method okay.
+- So we simply just call the get account balance.
+- Then it's a Http request will be sent to the server, get the method executed.
+- Whatever the response we get, then we will be receiving the response.
+- This is the concept in a very high level.
+- The stub can be synchronous or asynchronous.
+- If you want to write synchronous blocking style code, we have blocking stub.
+- Normally this is what most of the people will do anyway.
+- Your database calls and all.
+
+Server Sreaming
+- Client will call the server once,
+- Server will provide streaming response.
+- Use cases:
+ - Uber eats.
+ - Whether updates.
+ - Stock price updates.
+ - Large file download.
+- Possible outputs:
+ - 0 (onCompleted)
+ - 1 (onCompleted)
+ - N (onCompleted)
+ - Infinite
+ - onError
+
