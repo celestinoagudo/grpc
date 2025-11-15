@@ -14,7 +14,7 @@ class UnaryAsyncTest extends AbstractTest {
     void getBalanceTest() {
         var request = BalanceCheckRequest.newBuilder().setAccountNumber(1).build();
         var observer = ResponseObserver.<AccountBalance>create();
-        asyncStub.getAccountBalance(request, observer);
+        bankServiceAsyncStub.getAccountBalance(request, observer);
         observer.await();
         Assertions.assertEquals(1, observer.getItems().size());
         Assertions.assertEquals(100, observer.getItems().getFirst().getBalance());
@@ -24,7 +24,7 @@ class UnaryAsyncTest extends AbstractTest {
     @Test
     void allAccountsTest() {
         var observer = ResponseObserver.<AllAccountsResponse>create();
-        asyncStub.getAllAccounts(Empty.getDefaultInstance(), observer);
+        bankServiceAsyncStub.getAllAccounts(Empty.getDefaultInstance(), observer);
         observer.await();
         Assertions.assertEquals(1, observer.getItems().size());
         Assertions.assertEquals(10, observer.getItems().getFirst().getAccountsCount());

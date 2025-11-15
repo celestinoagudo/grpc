@@ -16,7 +16,7 @@ class ClientStreamingTest extends AbstractTest {
         //incoming response from the server.
         var responseObserver = ResponseObserver.<AccountBalance>create();
         //outgoing request from the client.
-        var requestObserver = asyncStub.deposit(responseObserver);
+        var requestObserver = bankServiceAsyncStub.deposit(responseObserver);
 
         //initial message - account number
         requestObserver.onNext(DepositRequest.newBuilder().setAccountNumber(5).build());

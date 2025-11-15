@@ -14,14 +14,14 @@ class UnaryBlockingTest extends AbstractTest {
     @Test
     void getBalanceTest() {
         var request = BalanceCheckRequest.newBuilder().setAccountNumber(2).build();
-        var balance = blockingStub.getAccountBalance(request);
+        var balance = bankServiceBlockingStub.getAccountBalance(request);
         LOGGER.info("Unary Balanced Received: {}", balance);
         Assertions.assertEquals(100, balance.getBalance());
     }
 
     @Test
     void getAllAccountsTest() {
-        var allAccounts = blockingStub.getAllAccounts(Empty.getDefaultInstance());
+        var allAccounts = bankServiceBlockingStub.getAllAccounts(Empty.getDefaultInstance());
         LOGGER.info("All Accounts: {}", allAccounts);
         Assertions.assertFalse(allAccounts.getAccountsList().isEmpty());
     }
