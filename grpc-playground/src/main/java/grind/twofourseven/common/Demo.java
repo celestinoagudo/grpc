@@ -10,7 +10,8 @@ public class Demo {
         GrpcServer.create(new BankService(),
                 new TransferService(),
                 new FlowControlService(),
-                new GuessingGameService()
+                new GuessingGameService(),
+                new grind.twofourseven.input.validation.service.BankService()
         ).start().await();
     }
 }

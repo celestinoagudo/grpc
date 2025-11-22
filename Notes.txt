@@ -153,3 +153,5 @@ Streaming vs Unary
 Server Emitting Rate (Backpressure):
 - we can do via bi-directional communication
 
+Bi-directional communication.
+
