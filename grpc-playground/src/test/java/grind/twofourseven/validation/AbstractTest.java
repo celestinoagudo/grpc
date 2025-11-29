@@ -4,8 +4,8 @@ import grind.twofourseven.common.AbstractChannelTest;
 import grind.twofourseven.common.GrpcServer;
 import grind.twofourseven.input.validation.service.BankService;
 import grind.twofourseven.model.input.validation.BankServiceGrpc;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractTest extends AbstractChannelTest {
 
@@ -13,14 +13,14 @@ public abstract class AbstractTest extends AbstractChannelTest {
     protected BankServiceGrpc.BankServiceBlockingStub bankServiceBlockingStub;
     protected BankServiceGrpc.BankServiceStub bankServiceAsyncStub;
 
-    @BeforeEach
+    @BeforeAll
     public void setup() {
         grpcServer.start();
         bankServiceBlockingStub = BankServiceGrpc.newBlockingStub(channel);
         bankServiceAsyncStub = BankServiceGrpc.newStub(channel);
     }
 
-    @AfterEach
+    @AfterAll
     public void stop() {
         grpcServer.stop();
     }
