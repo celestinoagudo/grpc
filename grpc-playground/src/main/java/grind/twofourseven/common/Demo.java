@@ -2,7 +2,7 @@ package grind.twofourseven.common;
 
 import grind.twofourseven.interactive.FlowControlService;
 import grind.twofourseven.interactive.GuessingGameService;
-import grind.twofourseven.patterns.service.BankService;
+import grind.twofourseven.input.trailer.service.BankService;
 import grind.twofourseven.patterns.service.TransferService;
 
 public class Demo {

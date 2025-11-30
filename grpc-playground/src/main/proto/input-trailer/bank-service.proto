@@ -1,0 +1,45 @@
+syntax = "proto3";
+package input.trailer;
+import "google/protobuf/empty.proto";
+option java_package = "grind.twofourseven.model.input.trailer";
+option java_multiple_files = true;
+
+message BalanceCheckRequest {
+  int32 account_number = 1;
+}
+
+message AccountBalance {
+  int32 account_number = 1;
+  int32 balance = 2;
+}
+
+message AllAccountsResponse {
+  repeated AccountBalance accounts = 1;
+}
+
+message WithdrawRequest {
+  int32 account_number = 1;
+  int32 amount = 2;
+}
+
+message Money {
+  int32 amount = 1;
+}
+
+enum ValidationCode {
+  INVALID_ACCOUNT = 0;
+  INVALID_AMOUNT = 1;
+  INSUFFICIENT_BALANCE = 2;
+}
+
+message ErrorMessage {
+  ValidationCode validation_code = 1;
+}
+
+service BankService {
+  //unary
+  rpc GetAccountBalance(BalanceCheckRequest) returns (AccountBalance);
+
+  //server streaming
+  rpc Withdraw(WithdrawRequest) returns (stream Money);
+}

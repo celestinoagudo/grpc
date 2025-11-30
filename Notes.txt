@@ -153,5 +153,16 @@ Streaming vs Unary
 Server Emitting Rate (Backpressure):
 - we can do via bi-directional communication
 
-Bi-directional communication.
+Bi-directional communication: server emitting rate
+
+Metadata
+- Metadata = Headers
+	- Ex:
+		- Content-Type: application/json (for GRPC, application/grpc)
+		- Transfer-Encoding: chunked
+- Metadata is sent in the initial response.
+- Trailer
+	- Trailers are metadata sent by the server to the Client at the end of an RPC
+	- They provide information about the status of the RPC
+	- It can include additional details such as custom metadata or error information
 
