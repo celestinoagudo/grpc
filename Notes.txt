@@ -170,3 +170,28 @@ Metadata
 gRPC - Deadline: client side timeout configuration for an RPC to complete.
  - fail fast: 
 
+ Wait For Ready
+ - Client is willing to wait for server to be available.
+
+ Channel
+ - Channel is an abstract over a connection and represents the connection.
+ - ManagedChannel - gRPC takes care of it.
+ - Connection creation is lazy and established during the first RPC
+ - 1 channel / connection is enough for client/server communication even for multiple concurrent requests.
+ 	- can also create more channels - but not really required
+ 	- channel creation is an expensive process.
+ 		- we create when the app starts (Think of Spring beans)
+ 		- we shutdown when the app terminates/when you do not need (what if the app crashes .. just ignore)
+ - thread safe.
+ - can be shared with multiple stubs for the server.
+ 	- bank service
+ 	- transfer service.
+
+ Persistent Connection Configuration
+
+ 	ServerBuilder.forPort(port)
+ 		.keepAlive(10, TimeUnit.MINUTES) // how often to send PING
+ 		.keepAliveTimeout(5, TimeUnit.MINUTES) //timeout for PING response
+ 		.maxConnectionIdle(30, TimeUnit.MINUTES) //idle connection with no RPC, send go AWAY after that.
+ 	//In internet terms, "ping" is a utility used to test the reachability of a host and measure the time it takes for a data packet to travel from your device to a server and back. This round-trip time, also known as latency, is measured in milliseconds (ms), with a lower number indicating a faster, more responsive connection.
+
