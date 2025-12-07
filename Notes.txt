@@ -166,3 +166,7 @@ Metadata
 	- They provide information about the status of the RPC
 	- It can include additional details such as custom metadata or error information
 
+
+gRPC - Deadline: client side timeout configuration for an RPC to complete.
+ - fail fast: 
+
