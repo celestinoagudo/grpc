@@ -3,6 +3,7 @@ package grind.twofourseven.deadline.interceptors;
 import grind.twofourseven.common.ResponseObserver;
 import grind.twofourseven.deadline.AbstractInterceptorTest;
 import grind.twofourseven.deadline.interceptor.DeadlineInterceptor;
+import grind.twofourseven.deadline.interceptor.GzipRequestInterceptor;
 import grind.twofourseven.model.deadline.AccountBalance;
 import grind.twofourseven.model.deadline.BalanceCheckRequest;
 import io.grpc.ClientInterceptor;
@@ -25,7 +26,7 @@ class DeadlineInterceptorTest extends AbstractInterceptorTest {
 
     @Override
     protected List<ClientInterceptor> getClientInterceptors() {
-        return List.of(new DeadlineInterceptor(Duration.ofSeconds(2)));
+        return List.of(new DeadlineInterceptor(Duration.ofSeconds(2)), new GzipRequestInterceptor());
     }
 
 
