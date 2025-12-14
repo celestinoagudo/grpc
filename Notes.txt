@@ -195,3 +195,7 @@ gRPC - Deadline: client side timeout configuration for an RPC to complete.
  		.maxConnectionIdle(30, TimeUnit.MINUTES) //idle connection with no RPC, send go AWAY after that.
  	//In internet terms, "ping" is a utility used to test the reachability of a host and measure the time it takes for a data packet to travel from your device to a server and back. This round-trip time, also known as latency, is measured in milliseconds (ms), with a lower number indicating a faster, more responsive connection.
 
+Interceptor
+- It is a mechanism to manipulate RPCs.
+- We can intercept RPCs both at client and server side to handle cross cutting concerns
+- concern: requirement
