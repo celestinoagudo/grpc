@@ -6,6 +6,7 @@ import grind.twofourseven.deadline.interceptor.DeadlineInterceptor;
 import grind.twofourseven.model.deadline.AccountBalance;
 import grind.twofourseven.model.deadline.BalanceCheckRequest;
 import io.grpc.ClientInterceptor;
+import io.grpc.Deadline;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DeadlineInterceptorTest extends AbstractInterceptorTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeadlineInterceptorTest.class);
@@ -43,5 +47,15 @@ class DeadlineInterceptorTest extends AbstractInterceptorTest {
         responseObserver.await();
         Assertions.assertEquals(Status.Code.DEADLINE_EXCEEDED,
                 Status.fromThrowable(responseObserver.getThrowable()).getCode());
+    }
+
+    @Test
+    void asyncDeadlineTestWithTimeout() {
+        var request = BalanceCheckRequest.newBuilder().setAccountNumber(1).build();
+        var responseObserver = ResponseObserver.<AccountBalance>create();
+        bankServiceAsyncStub.withDeadline(Deadline.after(6, TimeUnit.SECONDS))
+                .getAccountBalance(request, responseObserver);
+        responseObserver.await();
+        assertNull(responseObserver.getThrowable());
     }
 }
