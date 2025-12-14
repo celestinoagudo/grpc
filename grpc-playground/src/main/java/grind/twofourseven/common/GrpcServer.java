@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class GrpcServer {
 
@@ -21,7 +22,9 @@ public class GrpcServer {
     }
 
     public static GrpcServer create(final int port, final BindableService... services) {
-        var builder = ServerBuilder.forPort(port);
+        var builder = ServerBuilder.forPort(port).keepAliveTime(10, TimeUnit.SECONDS)
+//                .keepAliveTimeout(1, TimeUnit.SECONDS)
+//                .maxConnectionIdle(25, TimeUnit.SECONDS); // if there's no RPC, send go away.
         Arrays.asList(services).forEach(builder::addService);
         return new GrpcServer(builder.build());
     }
