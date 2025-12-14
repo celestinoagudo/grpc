@@ -1,12 +1,11 @@
 package grind.twofourseven.common;
 
-import grind.twofourseven.deadline.interceptor.GzipResponseInterceptor;
 import io.grpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class GrpcServer {
 
@@ -23,11 +22,14 @@ public class GrpcServer {
     }
 
     public static GrpcServer create(final int port, final BindableService... services) {
-        var builder = ServerBuilder.forPort(port).keepAliveTime(10, TimeUnit.SECONDS)
-                .intercept(new GzipResponseInterceptor());
-//                .keepAliveTimeout(1, TimeUnit.SECONDS)
-//                .maxConnectionIdle(25, TimeUnit.SECONDS); // if there's no RPC, send go away.
-        Arrays.asList(services).forEach(builder::addService);
+        return create(port, builder ->
+                Arrays.asList(services).forEach(builder::addService)
+        );
+    }
+
+    public static GrpcServer create(final int port, Consumer<ServerBuilder<?>> consumer) {
+        var builder = ServerBuilder.forPort(port);
+        consumer.accept(builder);
         return new GrpcServer(builder.build());
     }
 

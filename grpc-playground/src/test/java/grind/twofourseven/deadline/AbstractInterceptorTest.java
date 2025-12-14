@@ -1,6 +1,7 @@
 package grind.twofourseven.deadline;
 
 import grind.twofourseven.common.GrpcServer;
+import grind.twofourseven.deadline.interceptor.GzipResponseInterceptor;
 import grind.twofourseven.model.deadline.BankServiceGrpc;
 import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
@@ -13,15 +14,23 @@ import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractInterceptorTest {
-    private final GrpcServer grpcServer = GrpcServer.create(new DeadlineBankService());
+    private GrpcServer grpcServer;
     protected BankServiceGrpc.BankServiceBlockingStub bankServiceBlockingStub;
     protected BankServiceGrpc.BankServiceStub bankServiceAsyncStub;
     protected ManagedChannel managedChannel;
 
     protected abstract List<ClientInterceptor> getClientInterceptors();
 
+    protected GrpcServer createServer() {
+        return GrpcServer.create(6565, builder ->
+                builder.addService(new DeadlineBankService())
+                        .intercept(new GzipResponseInterceptor())
+        );
+    }
+
     @BeforeAll
     public void setup() {
+        grpcServer = createServer();
         grpcServer.start();
         managedChannel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext().intercept(getClientInterceptors()).build();
