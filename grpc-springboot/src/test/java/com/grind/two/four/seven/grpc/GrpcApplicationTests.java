@@ -1,4 +1,4 @@
-package com.frind.two.four.seven.grpc;
+package com.grind.two.four.seven.grpc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

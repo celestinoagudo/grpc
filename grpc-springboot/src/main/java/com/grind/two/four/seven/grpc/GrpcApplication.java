@@ -1,4 +1,4 @@
-package com.frind.two.four.seven.grpc;
+package com.grind.two.four.seven.grpc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
