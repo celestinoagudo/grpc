@@ -2,6 +2,7 @@ package com.grind.two.four.seven.grpc.service.handler;
 
 import com.grind.two.four.seven.grpc.common.Ticker;
 import com.grind.two.four.seven.grpc.exceptions.InsufficientBalanceException;
+import com.grind.two.four.seven.grpc.exceptions.InsufficientSharesException;
 import com.grind.two.four.seven.grpc.exceptions.UnknownTickerException;
 import com.grind.two.four.seven.grpc.exceptions.UnknownUserException;
 import com.grind.two.four.seven.grpc.repository.PortfolioItemRepository;
@@ -39,6 +40,24 @@ public class StockTradeRequestHandler {
                         () -> portfolioItemRepository.save(EntityMessageMapper.toPortfolioItem(stockTradeRequest))
 
                 );
+
+        return EntityMessageMapper.toStockTradeResponse(stockTradeRequest, user.getBalance());
+    }
+
+    @Transactional
+    public StockTradeResponse sellStock(final StockTradeRequest stockTradeRequest) {
+        validateTicker(stockTradeRequest.getTicker());
+        var user = userRepository.findById(stockTradeRequest.getUserId())
+                .orElseThrow(() -> new UnknownUserException(stockTradeRequest.getUserId()));
+
+        var portfolioItem = portfolioItemRepository.findByUserIdAndTicker(user.getId(),
+                        stockTradeRequest.getTicker()).filter(retrievedItem -> retrievedItem.getQuantity() >= stockTradeRequest.getQuantity())
+                .orElseThrow(() -> new InsufficientSharesException(user.getId()));
+        //valid request
+        var totalPrice = stockTradeRequest.getQuantity() * stockTradeRequest.getPrice();
+        user.setBalance(user.getBalance() + totalPrice);
+        portfolioItem.setQuantity(portfolioItem.getQuantity() - stockTradeRequest.getQuantity());
+
         return EntityMessageMapper.toStockTradeResponse(stockTradeRequest, user.getBalance());
     }
 
