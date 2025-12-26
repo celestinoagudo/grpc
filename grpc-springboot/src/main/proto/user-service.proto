@@ -46,7 +46,7 @@ message StockTradeResponse {
   int32 balance = 7;
 }
 
-service StockService {
+service UserService {
 
   rpc GetUserInformation(UserInformationRequest) returns (UserInformation);
 
