@@ -5,18 +5,4 @@ spring:
     defer-datasource-initialization: true
   grpc:
     server:
-      inprocess:
-        name: grpc-springboot
-    client:
-      default-channel:
-        target: in-process:grpc-springboot
-        negotiation-type: plaintext
-
-  server:
-    port: 8080
-    http2:
-      enabled: true
-
-#  grpc:
-#    server:
-#      port: 6565
+      port: 6565
